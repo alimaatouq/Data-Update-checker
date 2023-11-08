@@ -42,5 +42,5 @@ edited_file = st.file_uploader("Upload the Edited Excel File", type=["xlsx"])
 if original_file and edited_file:
 
     st.success("Comparison complete. You can download the compared file below:")
-    st.download_button("Download Compared File", data=compared_bytes, key="compared_file.xlsx")
+    st.download_button("Download Compared File", data=comapred_file, key="compared_file.xlsx")
 
