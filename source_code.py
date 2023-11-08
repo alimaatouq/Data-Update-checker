@@ -35,7 +35,7 @@ def compare_excel_files(original_file, edited_file):
     # Save the compared workbook and return the filename
     compared_filename = "compared_file.xlsx"
     compared_data.save(compared_filename)
-    return compared_file
+    return compared_filename
 
 # Streamlit app
 st.title("Excel File Comparison App")
