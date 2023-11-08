@@ -29,10 +29,9 @@ def compare_excel_files(original_file, edited_file):
                     cell_edited.fill = fill_style
 
     # Save the compared workbook and return the file bytes
-    compared_bytes = io.BytesIO()
-    compared_data.save(compared_bytes)
+    
     comapred_file = edited_file.save("compared_file.xlsx")
-    return compared_bytes, comapred_file
+    return comapred_file
 
 # Streamlit app
 st.title("Excel File Comparison App")
@@ -41,7 +40,6 @@ original_file = st.file_uploader("Upload the Original Excel File", type=["xlsx"]
 edited_file = st.file_uploader("Upload the Edited Excel File", type=["xlsx"])
 
 if original_file and edited_file:
-    compared_bytes = compare_excel_files(original_file, edited_file)
 
     st.success("Comparison complete. You can download the compared file below:")
     st.download_button("Download Compared File", data=compared_bytes, key="compared_file.xlsx")
