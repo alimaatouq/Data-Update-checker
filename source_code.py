@@ -27,8 +27,7 @@ def compare_excel_files(original_file, edited_file):
                 
                 if original_value != edited_value:
                     cell_edited.fill = fill_style
-    # Save the edited workbook
-    edited_file.save("compared_file.xlsx")
+
     # Save the compared workbook and return the file bytes
     compared_bytes = io.BytesIO()
     compared_data.save(compared_bytes)
