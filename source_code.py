@@ -47,6 +47,6 @@ if original_file and edited_file:
     compared_filename = compare_excel_files(original_file, edited_file)
 
     st.success(f"Comparison complete. You can download the compared file from the link below:")
-    st.download_button("Download Compared File", data = compared_data)
+    st.download_button("Download Compared File", data = compared_filename)
 
 st.write("Note: This app assumes that the sheet names are the same in both files for comparison.")
