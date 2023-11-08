@@ -31,7 +31,8 @@ def compare_excel_files(original_file, edited_file):
     # Save the compared workbook and return the file bytes
     compared_bytes = io.BytesIO()
     compared_data.save(compared_bytes)
-    return compared_bytes
+    comapred_file = edited_file.save("compared_file.xlsx")
+    return compared_bytes, comapred_file
 
 # Streamlit app
 st.title("Excel File Comparison App")
