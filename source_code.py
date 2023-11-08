@@ -13,8 +13,6 @@ def compare_excel_files(original_file, edited_file):
     # Get a list of sheet names from the original workbook
     sheet_names = original_data.sheetnames
 
-    # Create a new workbook to store the compared data
-    compared_data = openpyxl.Workbook()
 
     for sheet_name in sheet_names:
         original_sheet = original_data[sheet_name]
