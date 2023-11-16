@@ -36,7 +36,6 @@ def compare_and_save(original_file_path, edited_file_path):
     return output_file.getvalue()
 
 def main():
-    st.write('<style>div.block-container{padding-top:0.5rem;}</style>', unsafe_allow_html=True)
     st.image("https://www.unescwa.org/sites/default/files/images/logo/escwa-tag-blue.svg")
     st.title("Excel Comparison App")
 
