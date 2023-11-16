@@ -36,6 +36,7 @@ def compare_and_save(original_file_path, edited_file_path):
     return output_file.getvalue()
 
 def main():
+    st.image("https://www.google.com/url?sa=i&url=http%3A%2F%2Fwww.unescwa.org%2F&psig=AOvVaw0j8_PLBZzC7l52L5wEhqti&ust=1700221536719000&source=images&cd=vfe&ved=0CBIQjRxqFwoTCMCdvvi4yIIDFQAAAAAdAAAAABAT")
     st.title("Excel Comparison App")
 
     # Upload original and edited files
