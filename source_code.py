@@ -4,7 +4,6 @@ from openpyxl.styles import PatternFill
 from io import BytesIO
 
 
-st.write('<style>div.block-container{padding-top:0.5rem;}</style>', unsafe_allow_html=True)
 
 def compare_and_save(original_file_path, edited_file_path):
     # Open the original and edited workbooks
