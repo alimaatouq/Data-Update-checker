@@ -37,7 +37,7 @@ def compare_excel_files(original_data, edited_data):
 # Streamlit app
 st.title("Excel File Comparison App")
 
-with st.beta_expander("Upload Files"):
+with st.expander("Upload Files"):
     original_file = st.file_uploader("Upload the Original Excel File", type=["xlsx"])
     edited_file = st.file_uploader("Upload the Edited Excel File", type=["xlsx"])
 
