@@ -1,7 +1,6 @@
 import streamlit as st
 import openpyxl
 from openpyxl.styles import PatternFill
-import io
 
 # Function to compare two Excel files
 def compare_excel_files(original_file, edited_file):
@@ -33,10 +32,10 @@ def compare_excel_files(original_file, edited_file):
                 else:
                     cell_compared.value = original_value
 
-    # Save the compared workbook and return the file bytes
-    compared_bytes = io.BytesIO()
-    compared_data.save(compared_bytes)
-    return compared_bytes
+    # Save the compared workbook and return the filename
+    compared_filename = "compared_file.xlsx"
+    compared_data.save(compared_filename)
+    return compared_filename
 
 # Streamlit app
 st.title("Excel File Comparison App")
@@ -45,8 +44,9 @@ original_file = st.file_uploader("Upload the Original Excel File", type=["xlsx"]
 edited_file = st.file_uploader("Upload the Edited Excel File", type=["xlsx"])
 
 if original_file and edited_file:
-    compared_bytes = compare_excel_files(original_file, edited_file)
+    compared_filename = compare_excel_files(original_file, edited_file)
 
-    st.success("Comparison complete. You can download the compared file below:")
-    st.download_button("Download Compared File", data=compared_bytes, key="compared_file.xlsx")
+    st.success(f"Comparison complete. You can download the compared file from the link below:")
+    st.download_button("Download Compared File", compared_filename)
 
+st.write("Note: This app assumes that the sheet names are the same in both files for comparison.")
