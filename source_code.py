@@ -1,60 +1,56 @@
 import streamlit as st
 import openpyxl
 from openpyxl.styles import PatternFill
+from io import BytesIO
 
-# Function to compare two Excel files and return the filename of the compared file
-def compare_excel_files(original_file, edited_file):
-    try:
-        fill_style = PatternFill(start_color="FDD835", end_color="FDD835", fill_type="solid")
+def compare_and_save(original_file_path, edited_file_path):
+    # Open the original and edited workbooks
+    original_file = openpyxl.load_workbook(original_file_path)
+    edited_file = openpyxl.load_workbook(edited_file_path)
 
-        # Load the original and edited workbooks
-        original_wb = openpyxl.load_workbook(original_file)
-        edited_wb = openpyxl.load_workbook(edited_file)
+    fill_style = PatternFill(start_color="FDD835", end_color="FDD835", fill_type="solid")
 
-        # Get a list of sheet names from the original workbook
-        sheet_names = original_wb.sheetnames
+    # Get a list of sheet names to compare (assuming the sheet names are the same in both workbooks)
+    sheet_names = original_file.sheetnames
 
-        # Create a new workbook to store the compared data
-        compared_wb = openpyxl.Workbook()
+    # Iterate through the sheet names
+    for sheet_name in sheet_names:
+        original_sheet = original_file[sheet_name]
+        edited_sheet = edited_file[sheet_name]
 
-        for sheet_name in sheet_names:
-            original_sheet = original_wb[sheet_name]
-            edited_sheet = edited_wb[sheet_name]
-            compared_sheet = compared_wb.create_sheet(sheet_name)
+        for row_original, row_edited in zip(original_sheet.iter_rows(), edited_sheet.iter_rows()):
+            for cell_original, cell_edited in zip(row_original, row_edited):
+                original_value = cell_original.value
+                edited_value = cell_edited.value
 
-            for row_original, row_edited, row_compared in zip(original_sheet.iter_rows(), edited_sheet.iter_rows(), compared_sheet.iter_rows()):
-                for cell_original, cell_edited, cell_compared in zip(row_original, row_edited, row_compared):
-                    original_value = cell_original.value
-                    edited_value = cell_edited.value
+                if original_value != edited_value:
+                    cell_edited.fill = fill_style
 
-                    if original_value != edited_value:
-                        cell_compared.value = edited_value
-                        cell_compared.fill = fill_style
-                    else:
-                        cell_compared.value = original_value
+    # Save the edited workbook to a BytesIO object
+    output_file = BytesIO()
+    edited_file.save(output_file)
+    output_file.seek(0)
 
-        # Save the compared workbook and return the filename
-        compared_filename = "compared_file.xlsx"
-        compared_wb.save(compared_filename)
-        return compared_filename
+    return output_file
 
-    except Exception as e:
-        print(f"Error comparing Excel files: {e}")
-        return None
+def main():
+    st.title("Excel Comparison App")
 
-# Streamlit app
-st.title("Excel File Comparison App")
+    # Upload original and edited files
+    original_file = st.file_uploader("Upload Original Excel File", type=["xlsx"])
+    edited_file = st.file_uploader("Upload Edited Excel File", type=["xlsx"])
 
-original_file = st.file_uploader("Upload the Original Excel File", type=["xlsx"])
-edited_file = st.file_uploader("Upload the Edited Excel File", type=["xlsx"])
+    if original_file and edited_file:
+        # Perform comparison and get the compared file
+        compared_file = compare_and_save(original_file, edited_file)
 
-if original_file and edited_file:
-    compared_filename = compare_excel_files(original_file, edited_file)
+        # Add a download button for the compared file
+        st.download_button(
+            label="Download Compared File",
+            data=compared_file,
+            file_name="compared_file.xlsx",
+            key="download_button"
+        )
 
-    if compared_filename:
-        st.success(f"Comparison complete. You can download the compared file from the link below:")
-        st.download_button("Download Compared File", compared_filename)
-    else:
-        st.error("An error occurred while comparing the files. Please check the uploaded files and try again.")
-
-st.write("Note: This app assumes that the sheet names are the same in both files for comparison.")
+if __name__ == "__main__":
+    main()
