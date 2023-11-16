@@ -54,3 +54,18 @@ def main():
 
 if __name__ == "__main__":
     main()
+#edit footer
+page_style= """
+    <style>
+    footer{
+        visibility: visible;
+        }
+    footer:after{
+        content: 'Developed by Ali Maatouk - ESCWA Statistics, Information Society and Technology Cluster';
+        display:block;
+        position:relative;
+        color:#1e54e4;
+    }
+    </style>"""
+
+st.markdown(page_style, unsafe_allow_html=True)
