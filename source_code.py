@@ -3,12 +3,12 @@ import openpyxl
 from openpyxl.styles import PatternFill
 
 # Function to compare two Excel files
-def compare_excel_files(original_file, edited_file):
-    fill_style = PatternFill(start_color="FDD835", end_color="FDD835", fill_type="solid")
+@st.cache(allow_output_mutation=True)
+def load_excel(file):
+    return openpyxl.load_workbook(file)
 
-    # Load the original and edited workbooks
-    original_data = openpyxl.load_workbook(original_file)
-    edited_data = openpyxl.load_workbook(edited_file)
+def compare_excel_files(original_data, edited_data):
+    fill_style = PatternFill(start_color="FDD835", end_color="FDD835", fill_type="solid")
 
     # Get a list of sheet names from the original workbook
     sheet_names = original_data.sheetnames
@@ -32,19 +32,24 @@ def compare_excel_files(original_file, edited_file):
                 else:
                     cell_compared.value = original_value
 
-    # Save the compared workbook and return the filename
-    compared_filename = "compared_file.xlsx"
-    compared_data.save(compared_filename)
-    return compared_filename
+    return compared_data
 
 # Streamlit app
 st.title("Excel File Comparison App")
 
-original_file = st.file_uploader("Upload the Original Excel File", type=["xlsx"])
-edited_file = st.file_uploader("Upload the Edited Excel File", type=["xlsx"])
+with st.beta_expander("Upload Files"):
+    original_file = st.file_uploader("Upload the Original Excel File", type=["xlsx"])
+    edited_file = st.file_uploader("Upload the Edited Excel File", type=["xlsx"])
 
 if original_file and edited_file:
-    compared_filename = compare_excel_files(original_file, edited_file)
+    original_data = load_excel(original_file)
+    edited_data = load_excel(edited_file)
+
+    compared_data = compare_excel_files(original_data, edited_data)
+
+    # Save the compared workbook and return the filename
+    compared_filename = "compared_file.xlsx"
+    compared_data.save(compared_filename)
 
     st.success(f"Comparison complete. You can download the compared file from the link below:")
     st.download_button("Download Compared File", compared_filename)
