@@ -1,7 +1,8 @@
 import streamlit as st
 import openpyxl
 from openpyxl.styles import PatternFill
-from io import BytesIO
+import tempfile
+import os
 
 def compare_and_save(original_file_path, edited_file_path):
     # Open the original and edited workbooks
@@ -26,12 +27,11 @@ def compare_and_save(original_file_path, edited_file_path):
                 if original_value != edited_value:
                     cell_edited.fill = fill_style
 
-    # Save the edited workbook to a BytesIO object
-    output_file = BytesIO()
-    edited_file.save(output_file)
-    output_file.seek(0)
+    # Save the edited workbook to a temporary file
+    temp_file_path = os.path.join(tempfile.gettempdir(), "compared_file.xlsx")
+    edited_file.save(temp_file_path)
 
-    return output_file
+    return temp_file_path
 
 def main():
     st.title("Excel Comparison App")
@@ -41,13 +41,13 @@ def main():
     edited_file = st.file_uploader("Upload Edited Excel File", type=["xlsx"])
 
     if original_file and edited_file:
-        # Perform comparison and get the compared file
-        compared_file = compare_and_save(original_file, edited_file)
+        # Perform comparison and get the compared file path
+        compared_file_path = compare_and_save(original_file, edited_file)
 
         # Add a download button for the compared file
         st.download_button(
             label="Download Compared File",
-            data=compared_file,
+            data=compared_file_path,
             file_name="compared_file.xlsx",
             key="download_button"
         )
